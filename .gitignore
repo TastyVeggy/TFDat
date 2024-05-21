@@ -1,0 +1,4 @@
+*.tflite
+__pycache__/
+venv/
+results/
