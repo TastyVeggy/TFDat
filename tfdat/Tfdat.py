@@ -29,7 +29,7 @@ class Tfdat:
                 config[key] = value
             else:
                 print(f'"{key}" argument not found! valid args: {list(config.keys())}')
-                exit()
+                raise Exception("Above error")
         return config
 
     def _start_tracking(self, stream_path: str, config: dict):
@@ -66,8 +66,6 @@ class Tfdat:
         prevTime = 0
 
         while True:
-            start_time = time.time()
-
             ret, frame = cap.read()
             if not ret:
                 break
@@ -141,7 +139,3 @@ def draw_boxes(img, bbox_xyxy, class_ids, identities=None, class_names=None):
         utils.draw_ui_box(box, img, label=label, color=color, line_thickness=2)
 
     return img
-
-
-if __name__ == "__main__":
-    asone = det_track()

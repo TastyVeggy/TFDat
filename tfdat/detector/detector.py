@@ -3,6 +3,7 @@ import tflite_runtime.interpreter as tflite
 import numpy as np
 from tfdat.detector.letterbox import LetterBox
 import cv2
+from loguru import logger
 
 
 class Detector:
@@ -19,7 +20,7 @@ class Detector:
         self,
         image: list,
         input_shape: tuple = (640, 640),
-        conf_thres: float = 0.2,
+        conf_thres: float = 0.25,
         iou_thres: float = 0.45,
         max_det: int = 1000,
         filter_classes: bool = None,
@@ -46,7 +47,7 @@ class Detector:
         # Run inference
         self.interpreter.invoke()
         output_data = self.interpreter.get_tensor(self.output_details[0]["index"])
-        output_data[0][:4] *= 640
+        output_data[0][:4] *= input_shape[0]
 
         bs = output_data.shape[0]  # batch size
         nc = output_data.shape[1] - 4  # number of classes
@@ -111,9 +112,9 @@ class Detector:
             output = x[i]
 
         output[:, :4] = self._scale_boxes(
-            (640, 640), output[:, :4], original_image.shape[:2]
+            input_shape, output[:, :4], original_image.shape[:2]
         )
-
+        logger.info(output)
         image_info = {
             "width": original_image.shape[1],
             "height": original_image.shape[0],

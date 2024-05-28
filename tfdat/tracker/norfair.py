@@ -24,6 +24,7 @@ class NorFair:
         ids = []
         bboxes_xyxy = []
         scores = []
+        class_ids = []
 
         if isinstance(_dets_xyxy, np.ndarray) and len(_dets_xyxy) > 0:
 
